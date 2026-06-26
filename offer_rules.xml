@@ -1,0 +1,556 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="offer_generic" id="/!9wuk+[TIFP+XMvFP8^" x="30" y="20">
+    <statement name="activities">
+      <block type="activity" id="PKX29nQQy]?|A!YRqky/">
+        <statement name="ACTIVITY_CRITERIA">
+          <block type="activity_criteria" id="}:s5p2M;GIUAxIq5{L|^">
+            <mutation xmlns="http://www.w3.org/1999/xhtml"
+              object="activity"
+              attribute="h_bit_type"
+              operators="=="
+              payoperators="null"
+              iscountertypevector="no"
+              value="SPEND"
+              type="LOOKUP">
+            </mutation>
+            <field name="OBJECT">activity</field>
+            <field name="attribute">h_bit_type</field>
+            <field name="operators">==</field>
+            <field name="value">SPEND</field>
+          </block>
+        </statement>
+
+        <statement name="RULES">
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               RULE 1 — check unique
+               Guard: category present, unique SKUs < 9, unique categories < 4
+               Action: increment Product Category counter, then chain to rule 2
+          ════════════════════════════════════════════════════════════════════ -->
+          <block type="rule_line" id="p=Q7)m{ef)jrGY_PwPqM">
+            <field name="IDENTIFIER">check unique </field>
+
+            <statement name="CONDITION">
+              <!-- Condition 1: activity has a product category -->
+              <block type="if_generic_adaptive" id="iD:VUd1(.E?.FgcZxyBT">
+                <mutation xmlns="http://www.w3.org/1999/xhtml"
+                  object="activity"
+                  attribute="l_product_category"
+                  operators="not_null"
+                  payoperators="null"
+                  iscountertypevector="no"
+                  type="LOOKUP">
+                </mutation>
+                <field name="OBJECT">activity</field>
+                <field name="attribute">l_product_category</field>
+                <field name="operators">not_null</field>
+
+                <next>
+                  <!-- Condition 2: unique SKUs tracked so far < 9
+                       FIX: was <= 9, which allowed a 10th unique to be recorded -->
+                  <block type="if_generic_adaptive" id="*#,!kOxADA0IW,$c63FH">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml"
+                      object="member"
+                      attribute_level="MA_O"
+                      attribute="SKU Tracker"
+                      operators="&lt;"
+                      payoperators="null"
+                      iscountertypevector="yes"
+                      vector_counter_namespace="product_id"
+                      attribute_entity_map_level="Activity"
+                      type="NUMBER"
+                      target_type="NO TARGET"
+                      mto_ladder_value="DUMMY VALUE">
+                    </mutation>
+                    <field name="OBJECT">member</field>
+                    <field name="attribute_level">MA_O</field>
+                    <field name="attribute">SKU Tracker</field>
+                    <field name="vector_counter_name">unique</field>
+                    <field name="vector_counter_namespace">product_id</field>
+                    <field name="operators">&lt;</field>
+                    <value name="RHS_INPUT">
+                      <block type="static_value" id="R}NZx2:,3F#+HNSqvpt2">
+                        <field name="value">9</field>
+                      </block>
+                    </value>
+
+                    <next>
+                      <!-- Condition 3: unique categories tracked so far < 4
+                           FIX: was <= 4, which allowed a 5th unique category to be recorded -->
+                      <block type="if_generic_adaptive" id="}b*/{}7u#@!lbI1~J%S$">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml"
+                          object="member"
+                          attribute_level="MA_O"
+                          attribute="Product Category counter"
+                          operators="&lt;"
+                          payoperators="null"
+                          iscountertypevector="yes"
+                          vector_counter_namespace="l_product_category"
+                          attribute_entity_map_level="Activity"
+                          type="NUMBER"
+                          target_type="NO TARGET"
+                          mto_ladder_value="DUMMY VALUE">
+                        </mutation>
+                        <field name="OBJECT">member</field>
+                        <field name="attribute_level">MA_O</field>
+                        <field name="attribute">Product Category counter</field>
+                        <field name="vector_counter_name">unique</field>
+                        <field name="vector_counter_namespace">l_product_category</field>
+                        <field name="operators">&lt;</field>
+                        <value name="RHS_INPUT">
+                          <block type="static_value" id="B67!vt]al%uPS2o*`vVs">
+                            <field name="value">4</field>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+
+                  </block>
+                </next>
+
+              </block>
+            </statement>
+
+            <statement name="ACTION">
+              <!-- Action 1a: increment Product Category counter for this category -->
+              <block type="action" id="KIdVK$^jscv3CT!;OR7}">
+                <mutation xmlns="http://www.w3.org/1999/xhtml"
+                  iscountertypevector="yes"
+                  vector_counter_namespace="l_product_category"
+                  attribute_type_input="update_attribute"
+                  mta_type_value="MA_O"
+                  mta_attribute="Product Category counter"
+                  type="NUMBER"
+                  attribute_entity_map_level="Activity"
+                  target_type="NO TARGET"
+                  mto_ladder_value="DUMMY VALUE"
+                  action_operator="INCREMENT_BY">
+                </mutation>
+                <field name="action_type">update_attribute</field>
+                <field name="mta_type_value">MA_O</field>
+                <field name="mta_attribute">Product Category counter</field>
+                <field name="vector_counter_name">Product Category</field>
+                <field name="vector_counter_namespace">l_product_category</field>
+                <field name="action_operator">INCREMENT_BY</field>
+                <value name="RHS_INPUT_VALUE">
+                  <block type="static_value" id="IB#{.rsvk`hHiIL{PDjW">
+                    <field name="value">1</field>
+                  </block>
+                </value>
+
+                <next>
+                  <!-- ═══════════════════════════════════════════════════════
+                       RULE 2 — check unique sku
+                       Guard: unique categories < 4, unique SKUs < 9, product_id present
+                       Action: increment SKU Tracker, then chain to rule 3
+                  ════════════════════════════════════════════════════════════ -->
+                  <block type="rule" id="Wk-frN_+(|_x^5?0Uplb">
+                    <field name="IDENTIFIER">check unique sku</field>
+
+                    <statement name="CONDITION">
+                      <!-- Condition 1: unique categories so far < 4
+                           FIX: was <= 4 -->
+                      <block type="if_generic_adaptive" id="y^QFb_tIL9.vkWavkS8,">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml"
+                          object="member"
+                          attribute_level="MA_O"
+                          attribute="Product Category counter"
+                          operators="&lt;"
+                          payoperators="null"
+                          iscountertypevector="yes"
+                          vector_counter_namespace="l_product_category"
+                          attribute_entity_map_level="Activity"
+                          type="NUMBER"
+                          target_type="NO TARGET"
+                          mto_ladder_value="DUMMY VALUE">
+                        </mutation>
+                        <field name="OBJECT">member</field>
+                        <field name="attribute_level">MA_O</field>
+                        <field name="attribute">Product Category counter</field>
+                        <field name="vector_counter_name">unique</field>
+                        <field name="vector_counter_namespace">l_product_category</field>
+                        <field name="operators">&lt;</field>
+                        <value name="RHS_INPUT">
+                          <block type="static_value" id="Ux;r#AUU/46`Pm3K*sEj">
+                            <field name="value">4</field>
+                          </block>
+                        </value>
+
+                        <next>
+                          <!-- Condition 2: unique SKUs so far < 9
+                               FIX: was <= 9 -->
+                          <block type="if_generic_adaptive" id="|eXv;S4W/o|(f|z0#Rei">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml"
+                              object="member"
+                              attribute_level="MA_O"
+                              attribute="SKU Tracker"
+                              operators="&lt;"
+                              payoperators="null"
+                              iscountertypevector="yes"
+                              vector_counter_namespace="product_id"
+                              attribute_entity_map_level="Activity"
+                              type="NUMBER"
+                              target_type="NO TARGET"
+                              mto_ladder_value="DUMMY VALUE">
+                            </mutation>
+                            <field name="OBJECT">member</field>
+                            <field name="attribute_level">MA_O</field>
+                            <field name="attribute">SKU Tracker</field>
+                            <field name="vector_counter_name">unique</field>
+                            <field name="vector_counter_namespace">product_id</field>
+                            <field name="operators">&lt;</field>
+                            <value name="RHS_INPUT">
+                              <block type="static_value" id="oj;|iNkeR[ZKi!flS[pI">
+                                <field name="value">9</field>
+                              </block>
+                            </value>
+
+                            <next>
+                              <!-- Condition 3: activity has a product_id -->
+                              <block type="if_generic_adaptive" id="g%2iDh860iz/_Ktfrdey">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml"
+                                  object="activity"
+                                  attribute="product_id"
+                                  operators="not_null"
+                                  payoperators="null"
+                                  iscountertypevector="no"
+                                  type="LOV">
+                                </mutation>
+                                <field name="OBJECT">activity</field>
+                                <field name="attribute">product_id</field>
+                                <field name="operators">not_null</field>
+                              </block>
+                            </next>
+
+                          </block>
+                        </next>
+
+                      </block>
+                    </statement>
+
+                    <statement name="ACTION">
+                      <!-- Action 2a: increment SKU Tracker for this product_id -->
+                      <block type="action" id=".H7]bCx;@`vcNC*u/GZ/">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml"
+                          iscountertypevector="yes"
+                          vector_counter_namespace="product_id"
+                          attribute_type_input="update_attribute"
+                          mta_type_value="MA_O"
+                          mta_attribute="SKU Tracker"
+                          type="NUMBER"
+                          attribute_entity_map_level="Activity"
+                          target_type="NO TARGET"
+                          mto_ladder_value="DUMMY VALUE"
+                          action_operator="INCREMENT_BY">
+                        </mutation>
+                        <field name="action_type">update_attribute</field>
+                        <field name="mta_type_value">MA_O</field>
+                        <field name="mta_attribute">SKU Tracker</field>
+                        <field name="vector_counter_name">Product ID</field>
+                        <field name="vector_counter_namespace">product_id</field>
+                        <field name="action_operator">INCREMENT_BY</field>
+                        <value name="RHS_INPUT_VALUE">
+                          <block type="static_value" id="AA4u%N/F)~iU$/O9L(2N">
+                            <field name="value">1</field>
+                          </block>
+                        </value>
+
+                        <next>
+                          <!-- ═════════════════════════════════════════════
+                               RULE 3 — date Tracker
+                               Guard: this is the very first unique SKU (unique == 1)
+                               Action: stamp the 90-day window start date
+                          ══════════════════════════════════════════════════ -->
+                          <block type="rule" id="$ccG{G*`dqro?OOXr^dm">
+                            <field name="IDENTIFIER">date Tracker</field>
+
+                            <statement name="CONDITION">
+                              <!-- Only set Date Tracker on the member's first ever unique SKU -->
+                              <block type="if_generic_adaptive" id="5yv4n/kW+)93N%).tkMt">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml"
+                                  object="member"
+                                  attribute_level="MA_O"
+                                  attribute="SKU Tracker"
+                                  operators="=="
+                                  payoperators="null"
+                                  iscountertypevector="yes"
+                                  vector_counter_namespace="product_id"
+                                  attribute_entity_map_level="Activity"
+                                  type="NUMBER"
+                                  target_type="NO TARGET"
+                                  mto_ladder_value="DUMMY VALUE">
+                                </mutation>
+                                <field name="OBJECT">member</field>
+                                <field name="attribute_level">MA_O</field>
+                                <field name="attribute">SKU Tracker</field>
+                                <field name="vector_counter_name">unique</field>
+                                <field name="vector_counter_namespace">product_id</field>
+                                <field name="operators">==</field>
+                                <value name="RHS_INPUT">
+                                  <block type="static_value" id="%~g6grU~~s/x(Yi;c3F;">
+                                    <field name="value">1</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </statement>
+
+                            <statement name="ACTION">
+                              <!-- Stamp Date Tracker with today's date -->
+                              <block type="action" id="Q42xvgE$C,)t9@RA@KgG">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml"
+                                  iscountertypevector="no"
+                                  attribute_type_input="update_attribute"
+                                  mta_type_value="MA_O"
+                                  mta_attribute="Date Tracker"
+                                  type="DATE"
+                                  target_type="NO TARGET"
+                                  mto_ladder_value="DUMMY VALUE"
+                                  action_operator="SET">
+                                </mutation>
+                                <field name="action_type">update_attribute</field>
+                                <field name="mta_type_value">MA_O</field>
+                                <field name="mta_attribute">Date Tracker</field>
+                                <field name="action_operator">SET</field>
+                                <value name="RHS_INPUT_VALUE">
+                                  <block type="current_date_block" id="_EG(mcS51hxfiL4W7DnP">
+                                    <field name="current_date_type">DATE</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </statement>
+
+                          </block>
+                        </next>
+
+                      </block>
+                    </statement>
+
+                  </block>
+                </next>
+
+              </block>
+            </statement>
+
+            <next>
+              <!-- ═══════════════════════════════════════════════════════════
+                   RULE 4 — reward
+                   Guard:
+                     • TODAY is within 90 days of Date Tracker (start of window)
+                       FIX: original compared member.Date Tracker <= member.Date Tracker + 90
+                            which is trivially always true; corrected to current_date <= Date Tracker + 90
+                     • At least 4 unique categories purchased
+                     • At least 9 unique SKUs purchased
+                   Action: give 4000 points + privilege, then reset both counters
+              ════════════════════════════════════════════════════════════════ -->
+              <block type="rule" id="]r8/:r?cmhDzC%N_Vq,B">
+                <field name="IDENTIFIER">reward</field>
+
+                <statement name="CONDITION">
+                  <!-- Condition 1: current date is still within the 90-day window
+                       FIX: LHS changed from member.Date Tracker → current_date_block
+                            The old code evaluated (Date Tracker <= Date Tracker + 90) which
+                            is always true and never enforced the 90-day window. -->
+                  <block type="if_generic_adaptive" id="H./hD^@sKS|TY~hc;NMc">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml"
+                      object="current_date"
+                      attribute_level="MA_O"
+                      attribute="Date Tracker"
+                      operators="&lt;="
+                      payoperators="null"
+                      iscountertypevector="no"
+                      date_operator="DATE"
+                      type="DATE"
+                      target_type="NO TARGET">
+                    </mutation>
+                    <field name="OBJECT">current_date</field>
+                    <field name="attribute_level">MA_O</field>
+                    <field name="attribute">Date Tracker</field>
+                    <field name="date_operator">DATE</field>
+                    <field name="operators">&lt;=</field>
+                    <value name="RHS_INPUT">
+                      <!-- RHS: Date Tracker + 90 DAYS -->
+                      <block type="arithmetic_date" id="i;JUI|w,YGH{-gv{i}?v">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" opt="+"></mutation>
+                        <field name="operator">+</field>
+                        <field name="number">90</field>
+                        <field name="date_quantity">DAYS</field>
+                        <value name="LHS">
+                          <block type="member_attribute" id="`3a=3|v!2kO:WR#p8,8t">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml"
+                              attribute_type_input="MA_O"
+                              attribute="Date Tracker"
+                              iscountertypevector="no"
+                              attr_type="DATE">
+                            </mutation>
+                            <field name="ATTRIBUTE_TYPE">MA_O</field>
+                            <field name="ATTRIBUTE">Date Tracker</field>
+                            <field name="date_operator">DATE</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+
+                    <next>
+                      <!-- Condition 2: member has purchased from at least 4 unique categories -->
+                      <block type="if_generic_adaptive" id="knsvH?5EOw?e+R;Va6n:">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml"
+                          object="member"
+                          attribute_level="MA_O"
+                          attribute="Product Category counter"
+                          operators="&gt;="
+                          payoperators="null"
+                          iscountertypevector="yes"
+                          vector_counter_namespace="l_product_category"
+                          attribute_entity_map_level="Activity"
+                          type="NUMBER"
+                          target_type="NO TARGET"
+                          mto_ladder_value="DUMMY VALUE">
+                        </mutation>
+                        <field name="OBJECT">member</field>
+                        <field name="attribute_level">MA_O</field>
+                        <field name="attribute">Product Category counter</field>
+                        <field name="vector_counter_name">unique</field>
+                        <field name="vector_counter_namespace">l_product_category</field>
+                        <field name="operators">&gt;=</field>
+                        <value name="RHS_INPUT">
+                          <block type="static_value" id="[~K`5av2HN`w1eInH}1g">
+                            <field name="value">4</field>
+                          </block>
+                        </value>
+
+                        <next>
+                          <!-- Condition 3: member has purchased at least 9 unique SKUs -->
+                          <block type="if_generic_adaptive" id="zL.^$~Cr2,eD(v:X|nMM">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml"
+                              object="member"
+                              attribute_level="MA_O"
+                              attribute="SKU Tracker"
+                              operators="&gt;="
+                              payoperators="null"
+                              iscountertypevector="yes"
+                              vector_counter_namespace="product_id"
+                              attribute_entity_map_level="Activity"
+                              type="NUMBER"
+                              target_type="NO TARGET"
+                              mto_ladder_value="DUMMY VALUE">
+                            </mutation>
+                            <field name="OBJECT">member</field>
+                            <field name="attribute_level">MA_O</field>
+                            <field name="attribute">SKU Tracker</field>
+                            <field name="vector_counter_name">unique</field>
+                            <field name="vector_counter_namespace">product_id</field>
+                            <field name="operators">&gt;=</field>
+                            <value name="RHS_INPUT">
+                              <block type="static_value" id="W1lNiJ^GE$Tvau`bDl^(">
+                                <field name="value">9</field>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+
+                      </block>
+                    </next>
+
+                  </block>
+                </statement>
+
+                <statement name="ACTION">
+                  <!-- Action 4a: give 4000 bonus points -->
+                  <block type="action" id="ItL|6=!TP`H5W5VY9v-8">
+                    <mutation xmlns="http://www.w3.org/1999/xhtml"
+                      iscountertypevector="no"
+                      loyaltyaccountid="3"
+                      attribute_type_input="give_points">
+                    </mutation>
+                    <field name="action_type">give_points</field>
+                    <field name="LOYALTY_ACCOUNT">3</field>
+                    <field name="REWARD_TAGS">BASE</field>
+                    <value name="FORMULA">
+                      <block type="static_value" id="/VmfG4QPxFqu!d4kX?bV">
+                        <field name="value">4000</field>
+                      </block>
+                    </value>
+
+                    <next>
+                      <!-- Action 4b: give privilege 2277 -->
+                      <block type="action" id="=I):T^wF)!1Te%CkX8DN">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml"
+                          iscountertypevector="no"
+                          privilegetype="2277"
+                          attribute_type_input="give_privilege">
+                        </mutation>
+                        <field name="action_type">give_privilege</field>
+                        <field name="SELECTED_PRIVILEGE">2277</field>
+                        <field name="PRIVILEGE_USAGEPOLICY">225</field>
+                        <field name="previlege_Validity">product_validity</field>
+                        <value name="PRIVILEGE_QUANTITY">
+                          <block type="static_value" id="/BO{8[U7ByNFE-@-21HI">
+                            <field name="value">1</field>
+                          </block>
+                        </value>
+
+                        <next>
+                          <!-- Action 4c: reset SKU Tracker so offer can repeat -->
+                          <block type="action" id="jyPmmuK];A~33ePKE;8X">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml"
+                              iscountertypevector="yes"
+                              vector_counter_namespace="product_id"
+                              attribute_type_input="update_attribute"
+                              mta_type_value="MA_O"
+                              mta_attribute="SKU Tracker"
+                              type="NUMBER"
+                              attribute_entity_map_level="Activity"
+                              target_type="NO TARGET"
+                              mto_ladder_value="DUMMY VALUE"
+                              action_operator="RESET">
+                            </mutation>
+                            <field name="action_type">update_attribute</field>
+                            <field name="mta_type_value">MA_O</field>
+                            <field name="mta_attribute">SKU Tracker</field>
+                            <field name="vector_counter_name">Product ID</field>
+                            <field name="vector_counter_namespace">product_id</field>
+                            <field name="action_operator">RESET</field>
+
+                            <next>
+                              <!-- Action 4d: reset Product Category counter -->
+                              <block type="action" id="nZ9rx3b~67cROm-;mpW(">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml"
+                                  iscountertypevector="yes"
+                                  vector_counter_namespace="l_product_category"
+                                  attribute_type_input="update_attribute"
+                                  mta_type_value="MA_O"
+                                  mta_attribute="Product Category counter"
+                                  type="NUMBER"
+                                  attribute_entity_map_level="Activity"
+                                  target_type="NO TARGET"
+                                  mto_ladder_value="DUMMY VALUE"
+                                  action_operator="RESET">
+                                </mutation>
+                                <field name="action_type">update_attribute</field>
+                                <field name="mta_type_value">MA_O</field>
+                                <field name="mta_attribute">Product Category counter</field>
+                                <field name="vector_counter_name">Product Category</field>
+                                <field name="vector_counter_namespace">l_product_category</field>
+                                <field name="action_operator">RESET</field>
+                              </block>
+                            </next>
+
+                          </block>
+                        </next>
+
+                      </block>
+                    </next>
+
+                  </block>
+                </statement>
+
+              </block>
+            </next>
+
+          </block>
+        </statement>
+
+      </block>
+    </statement>
+  </block>
+</xml>
