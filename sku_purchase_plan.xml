@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PurchasePlan>
+  <PlanMetadata>
+    <PlanID>SKU-PURCHASE-001</PlanID>
+    <StartDate>2026-06-26</StartDate>
+    <EndDate>2026-09-23</EndDate>
+    <DurationDays>90</DurationDays>
+    <TotalUniqueSKUs>9</TotalUniqueSKUs>
+    <TotalCategories>4</TotalCategories>
+  </PlanMetadata>
+
+  <Categories>
+
+    <Category id="CAT-01" name="Electronics">
+      <SKU id="SKU-001">
+        <Name>Wireless Bluetooth Headphones</Name>
+        <UnitPrice currency="USD">79.99</UnitPrice>
+        <Quantity>1</Quantity>
+        <PurchaseDay>10</PurchaseDay>
+        <PurchaseDate>2026-07-06</PurchaseDate>
+        <Vendor>TechSound Inc.</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+      <SKU id="SKU-002">
+        <Name>USB-C 65W Fast Charger</Name>
+        <UnitPrice currency="USD">34.99</UnitPrice>
+        <Quantity>2</Quantity>
+        <PurchaseDay>25</PurchaseDay>
+        <PurchaseDate>2026-07-21</PurchaseDate>
+        <Vendor>PowerTech Co.</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+      <SKU id="SKU-003">
+        <Name>Portable Bluetooth Speaker</Name>
+        <UnitPrice currency="USD">59.99</UnitPrice>
+        <Quantity>1</Quantity>
+        <PurchaseDay>50</PurchaseDay>
+        <PurchaseDate>2026-08-15</PurchaseDate>
+        <Vendor>SoundWave Ltd.</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+    </Category>
+
+    <Category id="CAT-02" name="Clothing">
+      <SKU id="SKU-004">
+        <Name>Men's Running Sneakers</Name>
+        <UnitPrice currency="USD">89.99</UnitPrice>
+        <Quantity>1</Quantity>
+        <PurchaseDay>15</PurchaseDay>
+        <PurchaseDate>2026-07-11</PurchaseDate>
+        <Vendor>SportStep Brands</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+      <SKU id="SKU-005">
+        <Name>Women's Yoga Leggings</Name>
+        <UnitPrice currency="USD">44.99</UnitPrice>
+        <Quantity>2</Quantity>
+        <PurchaseDay>40</PurchaseDay>
+        <PurchaseDate>2026-08-05</PurchaseDate>
+        <Vendor>FlexWear Co.</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+    </Category>
+
+    <Category id="CAT-03" name="Home &amp; Kitchen">
+      <SKU id="SKU-006">
+        <Name>Stainless Steel Water Bottle 32oz</Name>
+        <UnitPrice currency="USD">24.99</UnitPrice>
+        <Quantity>3</Quantity>
+        <PurchaseDay>20</PurchaseDay>
+        <PurchaseDate>2026-07-16</PurchaseDate>
+        <Vendor>HydroHome Inc.</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+      <SKU id="SKU-007">
+        <Name>Non-Stick Frying Pan 10-inch</Name>
+        <UnitPrice currency="USD">39.99</UnitPrice>
+        <Quantity>1</Quantity>
+        <PurchaseDay>60</PurchaseDay>
+        <PurchaseDate>2026-08-25</PurchaseDate>
+        <Vendor>KitchenPro Supplies</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+    </Category>
+
+    <Category id="CAT-04" name="Health &amp; Beauty">
+      <SKU id="SKU-008">
+        <Name>Vitamin D3 Supplement 5000 IU</Name>
+        <UnitPrice currency="USD">18.99</UnitPrice>
+        <Quantity>2</Quantity>
+        <PurchaseDay>30</PurchaseDay>
+        <PurchaseDate>2026-07-26</PurchaseDate>
+        <Vendor>HealthFirst Nutrition</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+      <SKU id="SKU-009">
+        <Name>Natural Facial Moisturizer SPF 30</Name>
+        <UnitPrice currency="USD">27.99</UnitPrice>
+        <Quantity>1</Quantity>
+        <PurchaseDay>75</PurchaseDay>
+        <PurchaseDate>2026-09-09</PurchaseDate>
+        <Vendor>GlowCare Beauty</Vendor>
+        <Status>Planned</Status>
+      </SKU>
+    </Category>
+
+  </Categories>
+
+  <Summary>
+    <CategoryBreakdown>
+      <CategoryCount name="Electronics" skuCount="3"/>
+      <CategoryCount name="Clothing" skuCount="2"/>
+      <CategoryCount name="Home &amp; Kitchen" skuCount="2"/>
+      <CategoryCount name="Health &amp; Beauty" skuCount="2"/>
+    </CategoryBreakdown>
+    <TotalEstimatedCost currency="USD">491.82</TotalEstimatedCost>
+    <PurchaseSchedule>
+      <Entry day="10"  skuID="SKU-001" category="Electronics"/>
+      <Entry day="15"  skuID="SKU-004" category="Clothing"/>
+      <Entry day="20"  skuID="SKU-006" category="Home &amp; Kitchen"/>
+      <Entry day="25"  skuID="SKU-002" category="Electronics"/>
+      <Entry day="30"  skuID="SKU-008" category="Health &amp; Beauty"/>
+      <Entry day="40"  skuID="SKU-005" category="Clothing"/>
+      <Entry day="50"  skuID="SKU-003" category="Electronics"/>
+      <Entry day="60"  skuID="SKU-007" category="Home &amp; Kitchen"/>
+      <Entry day="75"  skuID="SKU-009" category="Health &amp; Beauty"/>
+    </PurchaseSchedule>
+  </Summary>
+
+</PurchasePlan>
